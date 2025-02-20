@@ -1,0 +1,1 @@
+Built a fully functional Web API for a car dealership management system using ASP.NET Core and SQL Server. Focused on scalability, performance, and data integrity. Implemented RESTful services and CRUD operations, enhancing the learning portfolio with real-world development practices.
