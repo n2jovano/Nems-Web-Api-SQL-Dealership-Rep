@@ -1,4 +1,5 @@
-﻿using DealershipApp.Models;
+﻿using DealershipApp.Dto;
+using DealershipApp.Models;
 
 namespace DealershipApp.Interfaces
 {
@@ -14,7 +15,7 @@ namespace DealershipApp.Interfaces
 
         ICollection<Vehicle> GetVehiclesByDealership(int dealerId);
         bool CreateDealership(Dealership dealership);
-        bool CreateDealership_2(Dealership dealership, Vehicle vehicle);
+        bool CreateDealership_2(Dealership dealership, int vehicle);
         bool Save();
     }
 }

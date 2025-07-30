@@ -40,7 +40,7 @@ namespace DealershipApp.Controllers
 
 
 
-        [HttpGet("{customerId}/getCustomer")]
+        [HttpGet("{customerId}")]
         [ProducesResponseType(200, Type = typeof(Customer))]
         [ProducesResponseType(400)]
         public IActionResult GetCustomer(int customerId)
@@ -94,6 +94,70 @@ namespace DealershipApp.Controllers
             }
 
             return Ok("created");
+        }
+
+        //https : //localhost:7040/api/Customer/4
+        //requires id field to be filled aswell
+        [HttpPut("{customerId}")]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateCustomer(int customerId, [FromBody] CustomerDto customerUpdated)
+        {
+            if (customerUpdated == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (customerId != customerUpdated.Id)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_customerRepository.CustomerExists(customerId))
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var customerMapper = _mapper.Map<Customer>(customerUpdated);
+
+            if (!_customerRepository.UpdateCustomer(customerMapper))
+            {
+                ModelState.AddModelError("", "something went wrong");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
+
+        [HttpDelete("{customerId}")]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteCustomer(int customerId)
+        {
+            if (!_customerRepository.CustomerExists(customerId))
+                {
+                    return NotFound();
+                }
+
+            var customerToDelete = _customerRepository.GetCustomer(customerId);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_customerRepository.DeleteCustomer(customerToDelete))
+            {
+                ModelState.AddModelError("", "issue while attempting to delete customer");
+            }
+            return NoContent();
         }
     }
 }

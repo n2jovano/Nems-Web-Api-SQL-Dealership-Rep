@@ -66,17 +66,17 @@ namespace DealershipApp.Controllers
 
 
 
-        [HttpGet("{vehicleId}/avgYear")]
+        [HttpGet("/avgYear")]
         [ProducesResponseType(200, Type = typeof(decimal))]
         [ProducesResponseType(400)]
-        public IActionResult GetVehicleAvgYear(int vehicleId)
+        public IActionResult GetVehicleAvgYear()
         {
-            if (!_vehicleRepository.VehicleExists(vehicleId))
-            {
-                return NotFound();
-            }
+            //if (!_vehicleRepository.VehicleExists(vehicleId))
+            //{
+            //    return NotFound();
+            //}
 
-            var vehicle = _vehicleRepository.GetVehicleAvgYear(vehicleId);  //original, imapper not needed
+            var vehicle = _vehicleRepository.GetVehicleAvgYear();  //original, imapper not needed
 
 
             if (!ModelState.IsValid)
@@ -201,7 +201,7 @@ namespace DealershipApp.Controllers
 
 
 
-        //create
+        //create  temp removed
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -237,6 +237,114 @@ namespace DealershipApp.Controllers
             }
 
             return Ok("created");
+        }
+
+
+
+
+
+
+        //[HttpPut("{vehicleId")]
+        //[ProducesResponseType(404)]
+        ////[ProducesResponseType(200)]
+        //[ProducesResponseType(204)]
+        //[ProducesResponseType(400)]
+        //public IActionResult UpdateVehicle(int vehicleId, [FromBody] VehicleDto vehicleUpdated)
+        //{
+        //    if (vehicleUpdated == null)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    if (vehicleId != vehicleUpdated.Id)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    //updated
+        //    if (!_vehicleRepository.VehicleExists(vehicleId))
+        //    {
+        //        return NotFound();
+        //    }
+
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    var vehicleMapper = _mapper.Map<Vehicle>(vehicleUpdated);
+
+        //    if (!_vehicleRepository.UpdateVehicle(vehicleMapper))
+        //    {
+        //        ModelState.AddModelError("", "there was an issue finding vehicle");
+        //        return StatusCode(500, ModelState);
+        //    }
+        //    //return NoContent();
+        //    return Ok();
+        //}
+
+        //https : //localhost:7040/api/Vehicle/26
+        //requires id field to be filled aswell
+        [HttpPut("{vehicleId}")]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateVehicle(int vehicleId, [FromBody] VehicleDto vehicleUpdated)
+        {
+            if (vehicleUpdated == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (vehicleId != vehicleUpdated.Id)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_vehicleRepository.VehicleExists(vehicleId))
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var vehicleMapper = _mapper.Map<Vehicle>(vehicleUpdated);
+
+            if (!_vehicleRepository.UpdateVehicle(vehicleMapper))
+            {
+                ModelState.AddModelError("", "something went wrong");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{vehicleId}")]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteVehicle(int vehicleId)
+        {
+            if (!_vehicleRepository.VehicleExists(vehicleId))
+            {
+                return NotFound();
+            }
+
+            var vehicleToDelete = _vehicleRepository.GetVehicle(vehicleId);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_vehicleRepository.DeleteVehicle(vehicleToDelete))
+            {
+                ModelState.AddModelError("", "issue while attempting to delete vehicle");
+            }
+            return NoContent();
         }
     }
 }

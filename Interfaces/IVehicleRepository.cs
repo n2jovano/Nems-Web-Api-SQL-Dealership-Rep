@@ -13,12 +13,16 @@ namespace DealershipApp.Interfaces
         //date
         DateTime GetVehicleOrderDate(int id);
         bool VehicleExists(int vehicleId);
-        decimal GetVehicleAvgYear(int year);
+        decimal GetVehicleAvgYear();
 
         ICollection<Vehicle> GetAllVehiclesByColour(string colour);
 
         //create
         bool CreateVehicle(Vehicle vehicle);
+
+        bool UpdateVehicle(Vehicle vehicle);
+
         bool Save();
+        bool DeleteVehicle(Vehicle vehicle);
     }
 }

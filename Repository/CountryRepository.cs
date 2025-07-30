@@ -49,5 +49,18 @@ namespace DealershipApp.Repository
 
             return stateSaved > 0 ? true : false;
         }
+
+        public bool UpdateCountry(Country country)
+        {
+            _context.Update(country);
+
+            return Save();
+        }
+
+        public bool DeleteCountry(Country country)
+        {
+            _context.Remove(country);
+            return Save();
+        }
     }
 }

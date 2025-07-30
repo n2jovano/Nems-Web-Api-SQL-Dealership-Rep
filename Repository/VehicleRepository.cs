@@ -19,7 +19,7 @@ namespace DealershipApp.Repository
             return _context.Vehicles.Where(p => p.Id == id).FirstOrDefault();
         }
 
-        public decimal GetVehicleAvgYear(int vehicleId)
+        public decimal GetVehicleAvgYear()
         {
             var count = _context.Vehicles.Where(p => p.VehicleYear > 1990);
             if (count.Count() <= 0)
@@ -85,6 +85,19 @@ namespace DealershipApp.Repository
 
             //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Vehicles] OFF");
             return stateSaved > 0 ? true : false;
+        }
+
+        public bool UpdateVehicle(Vehicle vehicle)
+        {
+            _context.Update(vehicle);
+
+            return Save();
+        }
+
+        public bool DeleteVehicle(Vehicle vehicle)
+        {
+            _context.Remove(vehicle);
+            return Save();
         }
     }
 }

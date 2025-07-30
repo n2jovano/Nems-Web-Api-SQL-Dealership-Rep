@@ -75,7 +75,7 @@ namespace DealershipApp.Controllers
         }
 
 
-
+        //https://localhost:7040/api/Country
         ////create
         [HttpPost]
         [ProducesResponseType(204)]
@@ -86,6 +86,7 @@ namespace DealershipApp.Controllers
             {
                 return BadRequest(ModelState);
             }
+
 
             //checks if it exists
             var customerData = _countryRepository.GetAllCountries().Where(c => c.Name.Trim().ToUpper() == countryCreate.Name.TrimEnd().ToUpper()).FirstOrDefault();
@@ -110,6 +111,112 @@ namespace DealershipApp.Controllers
             }
 
             return Ok("created");
+        }
+
+
+        //need to add id in both fields
+        [HttpPut("{countryId}")]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateCountry(int countryId, [FromBody] CountryDto countryUpdated)
+        {
+            if (countryUpdated == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (countryId != countryUpdated.Id)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_countryRepository.CountryExists(countryId))
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var countryMapper = _mapper.Map<Country>(countryUpdated);
+
+            if (!_countryRepository.UpdateCountry(countryMapper))
+            {
+                ModelState.AddModelError("", "something went wrong");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
+
+
+        ////v2.0 updated from above without countryid parameter which doesnt do anything
+        //[HttpPut]
+        ////[HttpPut("{countryId}/put")]
+        //[ProducesResponseType(404)]
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(204)]
+        //[ProducesResponseType(400)]
+        //public IActionResult UpdateCountry([FromBody]CountryDto countryUpdated)
+        //{
+        //    if (countryUpdated == null)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    //if (countryId != countryUpdated.Id)
+        //    //{
+        //    //    return BadRequest(ModelState);
+        //    //}
+
+        //    //updated
+        //    if (!_countryRepository.CountryExists(countryUpdated.Id))
+        //    {
+        //        return NotFound();
+        //    }
+
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest();   
+        //    }
+
+        //    var countryMapper = _mapper.Map<Country>(countryUpdated);
+
+        //    if(!_countryRepository.UpdateCountry(countryMapper))
+        //    {
+        //        ModelState.AddModelError("", "there was an issue");
+        //        return StatusCode(500, ModelState);
+        //    }
+        //    //return NoContent();
+        //    return Ok();
+        //}
+
+        [HttpDelete("{countryId}")]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteCountry(int countryId)
+        {
+            if (!_countryRepository.CountryExists(countryId))
+            {
+                return NotFound();
+            }
+
+            var countryToDelete = _countryRepository.GetCountry(countryId);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_countryRepository.DeleteCountry(countryToDelete))
+            {
+                ModelState.AddModelError("", "issue while attempting to delete custome");
+            }
+            return NoContent();
         }
     }
 }

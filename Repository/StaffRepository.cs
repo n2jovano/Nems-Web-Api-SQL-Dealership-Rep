@@ -15,13 +15,6 @@ namespace DealershipApp.Repository
             _context = context;
         }
 
-        public bool CreateStaff(Staff staff)
-        {
-            _context.Add(staff);
-
-            return Save();
-        }
-
         public ICollection<Staff> GetAllStaff()
         {
             return _context.Staff.OrderBy(p => p.Id).ToList();       
@@ -47,6 +40,13 @@ namespace DealershipApp.Repository
             var firstName = _context.Staff.Where(p => p.Id == id).Select(c => c.FirstName).FirstOrDefault();
             var lastName = _context.Staff.Where(p => p.Id == id).Select(c => c.LastName).FirstOrDefault();
             return firstName + " " + lastName;
+        }
+
+        public bool CreateStaff(Staff staff)
+        {
+            _context.Add(staff);
+
+            return Save();
         }
 
         public bool Save()

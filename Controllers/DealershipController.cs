@@ -13,7 +13,7 @@ namespace DealershipApp.Controllers  //(c) api controllers and (d) & (e) in dto 
     public class DealershipController : Controller
     {
         private readonly IDealershipRepository _dealershipRepository;
-        private readonly    ICountryRepository _countryRepository;  //foreign key addition
+        private readonly ICountryRepository _countryRepository;  //foreign key addition
         //(h.1)declare imapper, maps valid fields & removes null fields
         private readonly IMapper _mapper;
 
@@ -34,6 +34,7 @@ namespace DealershipApp.Controllers  //(c) api controllers and (d) & (e) in dto 
             //var dealerships = _dealershipRepository.GetDealerships();   //original
             var dealerships = _mapper.Map<List<DealershipDto>>(_dealershipRepository.GetDealerships());  //imapper implemented
 
+            //verifies if values are able to successfully bind the model & whether any rules were broken
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -133,14 +134,14 @@ namespace DealershipApp.Controllers  //(c) api controllers and (d) & (e) in dto 
         //[HttpPost]
         //[ProducesResponseType(204)]
         //[ProducesResponseType(400)]
-        //public IActionResult CreateDealership_2([FromQuery] int vehicleId, [FromQuery] int countryId, [FromBody] DealershipDto dealershipCreate)  //query strings, aka how data is inputted ie /&stringid=2 in url
+        //public IActionResult CreateDealership_2([FromBody] DealershipDto dealershipCreate, [FromQuery] int vehicleId, [FromQuery] int countryId)  //query strings, aka how data is inputted ie /&stringid=2 in url
         //{
         //    if (dealershipCreate == null)
         //    {
         //        return BadRequest(ModelState);
         //    }
 
-        //    var dealershipData = _dealershipRepository.GetDealerships().Where(v => v.Name.Trim().ToUpper() == dealershipCreate.Name.TrimEnd().ToUpper(dealershipCreate));
+        //    var dealershipData = _dealershipRepository.GetDealerships().Where(v => v.Name.Trim().ToUpper() == dealershipCreate.Name.TrimEnd().ToUpper()).FirstOrDefault();
 
         //    if (dealershipData != null)
         //    {
@@ -158,7 +159,7 @@ namespace DealershipApp.Controllers  //(c) api controllers and (d) & (e) in dto 
         //    //line below required as fk is mandatory, dont forget to add customer repository above, also argument above fromquery
         //    dealershipMap.Country = _countryRepository.GetCountry(countryId);
 
-        //    if (!_dealershipRepository.CreateDealership_2(vehicleId, dealershipMap))
+        //    if (!_dealershipRepository.CreateDealership_2(dealershipMap, vehicleId))
         //    {
         //        ModelState.AddModelError("", "theres an issue with something when trying to save");
         //        return StatusCode(500, ModelState);
@@ -166,6 +167,7 @@ namespace DealershipApp.Controllers  //(c) api controllers and (d) & (e) in dto 
 
         //    return Ok("created");
         //}
+
     }
 }
 

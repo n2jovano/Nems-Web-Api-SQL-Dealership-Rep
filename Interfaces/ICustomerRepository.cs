@@ -8,6 +8,8 @@ namespace DealershipApp.Interfaces
         ICollection<Customer> GetCustomers();
         bool CustomerExists(int customerId);
         bool CreateCustomer(Customer customer);
+        bool UpdateCustomer(Customer customer);
         bool Save();
+        bool DeleteCustomer(Customer customer);
     }
 }

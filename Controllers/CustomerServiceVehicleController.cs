@@ -87,6 +87,7 @@ namespace DealershipApp.Controllers
 
                                 select new
                                 {
+                                    vehicleid = v.Id,
                                     serviceId = s.Id,
                                     serviceType = s.TypeofService,
                                     description = s.Description,
@@ -108,5 +109,17 @@ namespace DealershipApp.Controllers
             }
             else return Ok(three_tables);
         }
+
+        //[HttpGet("{vehicleId")]
+        //public IActionResult GetVehicle(int vehicleId)
+        //{
+        //    if (_vehicleRepository.VehicleExists(vehicleId))
+        //    {
+        //        return NotFound();
+        //    }
+        //}
+
+
+
     }
 }
